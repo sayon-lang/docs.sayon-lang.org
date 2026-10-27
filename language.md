@@ -813,6 +813,7 @@ Standard modules are imported like any module, with a `standard/` path. Each mod
 | `standard/collections.sayon` | `sort` and `sort_by` (stable), `reverse`; `Set<T>` with `new_set`, `set_add`, `set_contains`, `set_remove`, `set_size`, `set_values` (as methods: `set.add(value)`); `Queue<T>` with `new_queue`, `queue_add`, `queue_take`, `queue_size` |
 | `standard/memory.sayon` | `read`, `write`, `size`, `read_bytes`, `write_bytes`, `read_text`, `offset`, `address`; see [C functions and unsafe code](#c-functions-and-unsafe-code) |
 | `standard/math.sayon` | `PI`, `E`, `TAU`, `sqrt`, `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `atan2`, `exp`, `log`, `log10`, `log2`, `pow`, `floor`, `ceil`, `round`, `trunc`, `abs`, `min`, `max`, `clamp`, `random` |
+| `standard/crypto.sayon` | `sha256` (32 bytes), `random_bytes` (from the system's secure source, 1 MiB at most at a time), `hex`, `same` (compares every byte, for secrets) |
 
 ```sayon
 io = import("standard/io.sayon")
@@ -825,7 +826,7 @@ while true
     print(strings.upper(line))
 ```
 
-String positions count Unicode characters. File and directory failures raise `IOError`; text that is not UTF-8 raises `EncodingError`. `math.random()` is not suitable for security.
+String positions count Unicode characters. File and directory failures raise `IOError`; text that is not UTF-8 raises `EncodingError`. `math.random()` is not suitable for security; `crypto.random_bytes` is, for keys and tokens.
 
 `os.run(program, arguments, directory, input, environment, inherit_environment)` runs another program and waits for it, returning its exit status and what it wrote to standard output and error. The arguments are passed exactly as given, with no shell in between, so no character in them has a special meaning. The program reads `input` (nothing unless given), and has this program's environment variables with those of `environment` added, or with `inherit_environment = false` only those. Running something through a shell is explicit, as with `os.run("sh", ["-c", "ls | wc -l"])`. A program that cannot be started raises `IOError`.
 
@@ -1175,10 +1176,10 @@ A range accepts a pre-release only when one of its parts names a pre-release of 
 
 - A project's graph has one version of each registry package: the latest that every range asking for it accepts. When none is, `sayon install` stops and names the ranges and who asks for each.
 - Once `sayon.lock` has a version, `sayon install` keeps it while the ranges still accept it, so installing again changes nothing; to move to a later version, delete `sayon.lock` (or change the range) and install again.
-- A dependency without `registry` comes from the registry `SAYON_REGISTRY` names, or else, until Sayon's registry is operated, from the one on this computer at `http://127.0.0.1:4100`, which `node local.mjs --port 4100` in [packages.sayon-lang.org](https://github.com/sayon-lang/packages.sayon-lang.org) starts; a registry package's own dependencies without `registry` come from its registry. `package` names the package when it differs from the alias.
+- A registry is named by the address of its index: `SAYON_REGISTRY` names one, or else, until Sayon's registry is operated, it is the one on this computer, whose index is at `http://127.0.0.1:4100/index`; `sayon run -- --port 4100` in [packages.sayon-lang.org](https://github.com/sayon-lang/packages.sayon-lang.org) starts it. A dependency without `registry` comes from that registry, and a registry package's own dependencies without `registry` come from its registry. `package` names the package when it differs from the alias.
 - Each version's files are checked against the digest the registry published for it when they arrive, and against `sayon.lock` from then on.
 
-`sayon search json` finds packages by part of their names or descriptions, and `sayon info json` shows a package's versions, owner, and dependencies. Both, like every registry command, take `--registry <address>`.
+`sayon search json` finds packages by part of their names or descriptions, and `sayon info json` shows a package's versions and dependencies, as its index has them. Both, like every registry command, take `--registry <address>`.
 
 ### Publishing
 
@@ -1187,7 +1188,7 @@ A range accepts a pre-release only when one of its parts names a pre-release of 
 - Publishing needs an account. The registry's operator makes it and gives you its token; `sayon login` asks for the token, checks it with the registry, and keeps it: in the Windows Credential Manager, or elsewhere in `~/.config/sayon/credentials`, which only you can read. `sayon logout` forgets it. Set `SAYON_TOKEN` instead for automated publishing.
 - A package's name belongs to the account that published it first. A version never changes once published, so fixing one means publishing the next.
 - Everything a published package depends on must come from a registry; `dev_dependencies` may be local, since only the package's own tests use them.
-- The registry, its protocol, and how to run one are in its repository, [packages.sayon-lang.org](https://github.com/sayon-lang/packages.sayon-lang.org).
+- The registry, its protocol, and how to run one are in its repository, [packages.sayon-lang.org](https://github.com/sayon-lang/packages.sayon-lang.org); Sayon's index is [packages.sayon-lang.org-index](https://github.com/sayon-lang/packages.sayon-lang.org-index).
 
 `sayon doctor` reports the Unicode version the toolchain follows and where the standard library, the runtime library, and clang were found. `sayon explain CODE` explains a diagnostic or runtime error code; [the error codes](https://github.com/sayon-lang/sayon/blob/main/docs/errors.md) lists them all.
 
