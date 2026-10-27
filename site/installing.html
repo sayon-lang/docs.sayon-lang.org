@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Installing Sayon · Sayon</title>
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="images/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="bar">
+    <a class="brand" href="index.html"><img src="images/logo.svg" alt="" width="28" height="28"> Sayon docs</a>
+    <nav aria-label="Guides">
+      <a href="installing.html" aria-current="page">Installing</a>
+      <a href="language.html">Language</a>
+      <a href="https://github.com/sayon-lang/www.sayon-lang.org">Website</a>
+      <a href="https://github.com/sayon-lang/docs.sayon-lang.org">GitHub</a>
+    </nav>
+  </header>
+  <div class="page">
+    <main class="text">
+<h1 id="installing-sayon">Installing Sayon</h1>
+<p>Each release has an installer for each device it supports, named after the operating system and processor it is for:</p>
+<div class="table"><table>
+<thead><tr><th>Device</th><th>Download</th><th>State</th></tr></thead>
+<tbody>
+<tr><td>Windows, x64 processors (most PCs)</td><td><code>sayon-&lt;version&gt;-windows-x64-setup.exe</code></td><td>available</td></tr>
+<tr><td>Windows, ARM64 processors</td><td><code>sayon-&lt;version&gt;-windows-arm64-setup.exe</code></td><td>not yet; arrives with the ARM64 validation in milestone M5</td></tr>
+<tr><td>Linux, x64 processors</td><td><code>sayon-&lt;version&gt;-linux-x64-setup</code></td><td>available</td></tr>
+<tr><td>Linux, ARM64 processors</td><td><code>sayon-&lt;version&gt;-linux-arm64-setup</code></td><td>not yet; arrives with the ARM64 validation in milestone M5</td></tr>
+<tr><td>macOS</td><td><code>sayon-&lt;version&gt;-macos-arm64-setup</code></td><td>not yet; planned for milestone M7</td></tr>
+</tbody></table></div>
+<p>To find your processor on Windows, open Settings &gt; System &gt; About and look at "System type"; on Linux, <code>uname -m</code> prints <code>x86_64</code> for x64. Downloads are published on the <a href="https://github.com/sayon-lang/sayon/releases">releases page</a>, together with a <code>SHA256SUMS.txt</code> file for checking them: <code>Get-FileHash &lt;file&gt;</code> in PowerShell prints the checksum to compare, and <code>sha256sum -c SHA256SUMS.txt</code> on Linux checks every file next to it. No release has been published yet; see <a href="#building-the-downloads">Building the downloads</a> to make the installer yourself.</p>
+<h2 id="windows">Windows</h2>
+<p>Run the installer and answer its question. It installs Sayon for your user account, so it needs no administrator rights, and it:</p>
+<ul>
+<li>puts Sayon in <code>%LOCALAPPDATA%\Programs\Sayon</code>;</li>
+<li>adds that folder's <code>bin</code> to your <code>PATH</code>, so <code>sayon</code> works in terminals opened afterwards;</li>
+<li>adds Sayon to Settings &gt; Apps, where it can be uninstalled;</li>
+<li>shows the Sayon icon on <code>.sayon</code> files, unless another program already opens them.</li>
+</ul>
+<p>At the end it runs <code>sayon doctor</code>, which shows whether native builds are ready. Running and testing programs works straight away; <code>sayon build</code> and <code>sayon run --native</code> also need clang from <a href="https://releases.llvm.org">LLVM</a>.</p>
+<p>Running a newer installer replaces the installed version. The new files are unpacked next to the old ones first, so an interrupted installation leaves the previous one working. When a program still has a file of the old version open, such as an editor running <code>sayon lsp</code>, the old files it cannot remove stay in <code>Sayon.previous</code> beside the installation; the next installation, or uninstalling, removes them.</p>
+<h3 id="options">Options</h3>
+<pre><code class="language-text">sayon-setup [options]              Install Sayon for the current user
+sayon-setup uninstall [options]    Remove Sayon
+
+--prefix &lt;folder&gt;    Install into (or remove from) this folder instead
+-y, --yes            Do not ask for confirmation
+--no-path            Do not add Sayon to PATH</code></pre>
+<p><code>--prefix</code> accepts only an empty folder or one that already holds Sayon, so it can never overwrite other files. For an unattended installation, pass <code>--yes</code>.</p>
+<h3 id="uninstalling">Uninstalling</h3>
+<p>Remove Sayon from Settings &gt; Apps, or run <code>uninstall.exe</code> in the installation folder. Uninstalling removes the installation folder and undoes each change listed above. Your own programs and projects are not touched.</p>
+<h3 id="without-the-installer">Without the installer</h3>
+<p>The <code>sayon-&lt;version&gt;-windows-x64.zip</code> archive holds the same files. Unpack it anywhere, add its <code>bin</code> folder to your <code>PATH</code>, and run <code>sayon doctor</code>.</p>
+<h2 id="linux">Linux</h2>
+<p>Make the installer executable and run it:</p>
+<pre><code class="language-text">chmod +x sayon-&lt;version&gt;-linux-x64-setup
+./sayon-&lt;version&gt;-linux-x64-setup</code></pre>
+<p>It installs Sayon for your user account, so it needs no root, and it:</p>
+<ul>
+<li>puts Sayon in <code>~/.local/share/sayon</code>;</li>
+<li>links <code>~/.local/bin/sayon</code> to it, unless something else is there already.</li>
+</ul>
+<p>It leaves your shell's profile alone. Most systems put <code>~/.local/bin</code> on <code>PATH</code> when it exists; when it is not on yours, the installer prints the line to add to <code>~/.profile</code>.</p>
+<p>At the end it runs <code>sayon doctor</code>. Running and testing programs works straight away; native builds also need clang, from your system's packages (for example <code>sudo apt install clang</code>) or from <a href="https://releases.llvm.org">LLVM</a>. TLS uses the system's OpenSSL 3, <code>libssl.so.3</code>, which most systems have. The download says in <code>INSTALL.txt</code> which version of the GNU C library it needs at least.</p>
+<p>The options are those of the Windows installer, and running a newer installer replaces the installed version the same way.</p>
+<h3 id="uninstalling-1">Uninstalling</h3>
+<p>Run <code>~/.local/share/sayon/uninstall</code>, or the installer with <code>uninstall</code>. Uninstalling removes the installation folder and the link. Your own programs and projects are not touched.</p>
+<h3 id="without-the-installer-1">Without the installer</h3>
+<p>The <code>sayon-&lt;version&gt;-linux-x64.tar.gz</code> archive holds the same files. Unpack it anywhere (<code>tar -xzf &lt;file&gt;</code>), add its <code>bin</code> folder to your <code>PATH</code>, and run <code>sayon doctor</code>.</p>
+<h2 id="building-the-downloads">Building the downloads</h2>
+<p><code>scripts/package.ps1</code> on Windows, and <code>scripts/package.sh</code> on Linux, build a release of the compiler and runtime, pack it into the archive, and build the installer with the files inside it, for the device they run on:</p>
+<pre><code class="language-text">powershell -File scripts/package.ps1
+scripts/package.sh</code></pre>
+<p>The results are in <code>dist/</code>: the installer, the archive, and <code>SHA256SUMS.txt</code>. On Linux the installer carries the files as a zip archive, which <code>scripts/package.sh</code> writes with Python 3. A plain <code>cargo build</code> builds an installer with no files inside, which says so when run.</p>
+    </main>
+  </div>
+  <footer>
+    <p>Sayon is open source, under the Apache License 2.0 with LLVM's exception. These pages are made from <a href="https://github.com/sayon-lang/docs.sayon-lang.org">their Markdown</a> by a Sayon program.</p>
+  </footer>
+</body>
+</html>

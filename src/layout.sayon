@@ -1,0 +1,91 @@
+# What every page has around its text: the bar with the guides, and for a
+# long page the list of its sections.
+
+strings = import("standard/strings.sayon")
+html = import("src/html.sayon")
+markdown = import("src/markdown.sayon")
+
+constant GITHUB = "https://github.com/sayon-lang"
+
+type Link = [label: string, address: string]
+
+function links() -> Array<Link>
+    return [
+        Link(label = "Installing", address = "installing.html"),
+        Link(label = "Language", address = "language.html"),
+        Link(label = "Website", address = GITHUB + "/www.sayon-lang.org"),
+        Link(label = "GitHub", address = GITHUB + "/docs.sayon-lang.org")
+    ]
+
+# A long page's sections and their subsections.
+private function contents(document: markdown.Document) -> Array<string>
+    out: Array<string> = []
+    sections = 0
+    for heading in document.headings
+        if heading.level == 2
+            sections += 1
+    if sections < 4
+        return out
+    push(out, "    <nav class=\"contents\" aria-label=\"On this page\">")
+    push(out, "      <p>On this page</p>")
+    push(out, "      <ul>")
+    open = false
+    for heading in document.headings
+        entry = "<a href=\"#{heading.id}\">{html.text(heading.title)}</a>"
+        if heading.level == 2
+            if open
+                push(out, "        </ul></li>")
+            push(out, "        <li>" + entry + "<ul>")
+            open = true
+        elseif heading.level == 3 and open
+            push(out, "          <li>" + entry + "</li>")
+    if open
+        push(out, "        </ul></li>")
+    push(out, "      </ul>")
+    push(out, "    </nav>")
+    return out
+
+# A page: the guide `document`, as the file `page`.
+function render(document: markdown.Document, page: string) -> string
+    title = if_text(page == "index.html", "Sayon's documentation", document.title + " · Sayon")
+    out: Array<string> = []
+    push(out, "<!doctype html>")
+    push(out, "<html lang=\"en\">")
+    push(out, "<head>")
+    push(out, "  <meta charset=\"utf-8\">")
+    push(out, "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">")
+    push(out, "  <title>{html.text(title)}</title>")
+    push(out, "  <link rel=\"icon\" href=\"favicon.ico\" sizes=\"any\">")
+    push(out, "  <link rel=\"icon\" href=\"images/logo.svg\" type=\"image/svg+xml\">")
+    push(out, "  <link rel=\"stylesheet\" href=\"style.css\">")
+    push(out, "</head>")
+    push(out, "<body>")
+    push(out, "  <header class=\"bar\">")
+    push(out, "    <a class=\"brand\" href=\"index.html\"><img src=\"images/logo.svg\" alt=\"\" width=\"28\" height=\"28\"> Sayon docs</a>")
+    push(out, "    <nav aria-label=\"Guides\">")
+    for target in links()
+        current = if_text(target.address == page, " aria-current=\"page\"", "")
+        push(out, "      <a href=\"{html.escape(target.address)}\"{current}>{html.text(target.label)}</a>")
+    push(out, "    </nav>")
+    push(out, "  </header>")
+    sections = contents(document)
+    layout = if_text(length(sections) > 0, "page with-contents", "page")
+    push(out, "  <div class=\"{layout}\">")
+    for line in sections
+        push(out, clone(line))
+    push(out, "    <main class=\"text\">")
+    push(out, clone(document.body))
+    push(out, "    </main>")
+    push(out, "  </div>")
+    push(out, "  <footer>")
+    push(out, "    <p>Sayon is open source, under the Apache License 2.0 with LLVM's exception. These pages are made from <a href=\"{GITHUB}/docs.sayon-lang.org\">their Markdown</a> by a Sayon program.</p>")
+    push(out, "  </footer>")
+    push(out, "</body>")
+    push(out, "</html>")
+    push(out, "")
+    return strings.join(out, "\n")
+
+private function if_text(condition: boolean, yes: string, no: string) -> string
+    if condition
+        return clone(yes)
+    return clone(no)

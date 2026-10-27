@@ -400,8 +400,6 @@ function size(shape: Shape) -> float
 - A case that can never run, because the cases above it match everything it would, is reported as a warning, as is an alternative that the cases and alternatives before it already cover.
 - Matching a variable borrows its value, and names bound by a case borrow its parts: copy them with `clone`, and do not change the variable while such a case runs. Matching `move(variable)` or a computed value gives the match ownership, so the names bound by cases without a guard own their parts.
 
-## Operators
-
 ## Functions
 
 ```sayon
@@ -1358,7 +1356,7 @@ A comment on the warning's line, or the line above, suppresses it by name: `# al
 
 ## Editors
 
-`sayon lsp` is a language server: editors start it and talk to it in the language server protocol over its standard input and output. The VS Code extension in `editors/vscode` starts it as the setting `sayon.path` names it (`sayon` on the `PATH` by default), and the command **Sayon: Restart the Language Server** starts it again.
+`sayon lsp` is a language server: editors start it and talk to it in the language server protocol over its standard input and output. The [VS Code extension](https://github.com/sayon-lang/sayon-vscode) starts it as the setting `sayon.path` names it (`sayon` on the `PATH` by default), and the command **Sayon: Restart the Language Server** starts it again.
 
 Each open document is checked as `sayon lint` checks it, as the entry of a program, with its project's root when it is in one, and with what the editor holds of every open document in place of its file, saved or not. Its errors and warnings show as it changes. The server answers from what the checker resolved, so the answers stay useful while there are errors, syntax errors among them:
 

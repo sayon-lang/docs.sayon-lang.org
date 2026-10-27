@@ -1,0 +1,50 @@
+# Makes the guides into the site in `site`: each page's Markdown as HTML in
+# the layout, with the files of `static` beside them.
+
+filesystem = import("standard/filesystem.sayon")
+io = import("standard/io.sayon")
+markdown = import("src/markdown.sayon")
+layout = import("src/layout.sayon")
+
+constant SITE = "site"
+constant STATIC = "static"
+
+# A guide's Markdown, and the page it becomes.
+type Guide = [source: string, page: string]
+
+function guides() -> Array<Guide>
+    return [
+        Guide(source = "README.md", page = "index.html"),
+        Guide(source = "installing.md", page = "installing.html"),
+        Guide(source = "language.md", page = "language.html")
+    ]
+
+# A guide's page, as the site holds it.
+function page(guide: Guide) -> string
+    return layout.render(markdown.convert(io.read_file(guide.source)), guide.page)
+
+# Removes a folder and everything in it.
+function clear(folder: string)
+    if not filesystem.exists(folder)
+        return
+    entries = filesystem.walk(folder)
+    # Each folder comes before what it holds, so the last entries go first.
+    index = length(entries) - 1
+    while index >= 0
+        filesystem.remove(filesystem.join(folder, entries[index]))
+        index -= 1
+    filesystem.remove(folder)
+
+function main()
+    clear(SITE)
+    filesystem.create_directory(SITE)
+    for entry in filesystem.walk(STATIC)
+        source = filesystem.join(STATIC, entry)
+        target = filesystem.join(SITE, entry)
+        if filesystem.is_directory(source)
+            filesystem.create_directory(target)
+        else
+            filesystem.copy(source, target)
+    for guide in guides()
+        io.write_file(filesystem.join(SITE, guide.page), page(guide))
+        print("wrote {SITE}/{guide.page}")

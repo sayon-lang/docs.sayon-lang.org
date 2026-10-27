@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sayon's documentation</title>
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="images/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="bar">
+    <a class="brand" href="index.html"><img src="images/logo.svg" alt="" width="28" height="28"> Sayon docs</a>
+    <nav aria-label="Guides">
+      <a href="installing.html">Installing</a>
+      <a href="language.html">Language</a>
+      <a href="https://github.com/sayon-lang/www.sayon-lang.org">Website</a>
+      <a href="https://github.com/sayon-lang/docs.sayon-lang.org">GitHub</a>
+    </nav>
+  </header>
+  <div class="page">
+    <main class="text">
+<p align="center">
+  <img src="images/logo.svg" alt="Sayon logo" width="120">
+</p>
+<h1 align="center">Sayon's documentation</h1>
+<p align="center">Programming made easy. Safety made automatic.</p>
+<p>The guides to <a href="https://github.com/sayon-lang/sayon">Sayon</a>, which will be published at <code>docs.sayon-lang.org</code>:</p>
+<ul>
+<li><a href="installing.html">Installing</a>: installers for each device, what they change, and uninstalling</li>
+<li><a href="language.html">The language</a>: a reference for everything implemented so far, from values and ownership to projects, packages, and targets</li>
+</ul>
+<p>The references that change with the compiler stay beside its code, in <a href="https://github.com/sayon-lang/sayon/tree/main/docs">sayon-lang/sayon</a>:</p>
+<ul>
+<li><a href="https://github.com/sayon-lang/sayon/blob/main/docs/features.md">Feature ledger</a>: what exists, what is planned, and for which milestone</li>
+<li><a href="https://github.com/sayon-lang/sayon/blob/main/docs/errors.md">Error codes</a>: what each diagnostic and runtime error code means, also shown by <code>sayon explain CODE</code></li>
+<li><a href="https://github.com/sayon-lang/sayon/blob/main/docs/implementation.md">Implementation records</a>: grammar, ownership rules, cleanup order, data layouts, and the error ABI</li>
+<li><a href="https://github.com/sayon-lang/sayon/blob/main/docs/licenses.md">Licenses</a>: what is not Sayon's own in its files and in the programs it builds</li>
+</ul>
+<p>The package registry's protocol is in <a href="https://github.com/sayon-lang/packages.sayon-lang.org">packages.sayon-lang.org</a>.</p>
+<h2 id="writing-here">Writing here</h2>
+<p>These pages describe Sayon as it is implemented: a change to the language goes with a change here. Each page is Markdown that GitHub shows as it is, and a Sayon program makes the site from the same files:</p>
+<pre><code class="language-bash">sayon run
+sayon test</code></pre>
+<p><code>sayon run</code> writes <code>site/</code>: each guide's page, in the layout of <code>src/layout.sayon</code>, with the files of <code>static/</code> (the stylesheet and the logo) beside them. <code>src/markdown.sayon</code> reads Markdown as these pages write it: headings with the ids GitHub gives them, paragraphs, lists, tables, code (Sayon's highlighted by <code>src/highlight.sayon</code>), and in text <code>code</code>, <strong>strong</strong>, <em>emphasis</em>, and links, those to another guide made links to its page. <code>sayon test</code> runs its tests, and checks that <code>site/</code> holds what the program makes, so a change to a page goes with its HTML. <code>site/</code> is plain HTML and CSS that any static host serves; to see it:</p>
+<pre><code class="language-bash">python -m http.server 8000 --directory site</code></pre>
+<h2 id="license">License</h2>
+<p><a href="https://github.com/sayon-lang/docs.sayon-lang.org/blob/main/LICENSE">Apache License, Version 2.0, with LLVM's exception</a>, as Sayon.</p>
+    </main>
+  </div>
+  <footer>
+    <p>Sayon is open source, under the Apache License 2.0 with LLVM's exception. These pages are made from <a href="https://github.com/sayon-lang/docs.sayon-lang.org">their Markdown</a> by a Sayon program.</p>
+  </footer>
+</body>
+</html>

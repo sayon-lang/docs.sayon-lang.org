@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo.svg" alt="Sayon logo" width="120">
+  <img src="static/images/logo.svg" alt="Sayon logo" width="120">
 </p>
 
 <h1 align="center">Sayon's documentation</h1>
@@ -22,7 +22,18 @@ The package registry's protocol is in [packages.sayon-lang.org](https://github.c
 
 ## Writing here
 
-These pages describe Sayon as it is implemented: a change to the language goes with a change here. Each page is Markdown that GitHub shows as it is; the site will be made from the same files.
+These pages describe Sayon as it is implemented: a change to the language goes with a change here. Each page is Markdown that GitHub shows as it is, and a Sayon program makes the site from the same files:
+
+```bash
+sayon run
+sayon test
+```
+
+`sayon run` writes `site/`: each guide's page, in the layout of `src/layout.sayon`, with the files of `static/` (the stylesheet and the logo) beside them. `src/markdown.sayon` reads Markdown as these pages write it: headings with the ids GitHub gives them, paragraphs, lists, tables, code (Sayon's highlighted by `src/highlight.sayon`), and in text `code`, **strong**, *emphasis*, and links, those to another guide made links to its page. `sayon test` runs its tests, and checks that `site/` holds what the program makes, so a change to a page goes with its HTML. `site/` is plain HTML and CSS that any static host serves; to see it:
+
+```bash
+python -m http.server 8000 --directory site
+```
 
 ## License
 
