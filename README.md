@@ -1,0 +1,29 @@
+<p align="center">
+  <img src="logo.svg" alt="Sayon logo" width="120">
+</p>
+
+<h1 align="center">Sayon's documentation</h1>
+
+<p align="center">Programming made easy. Safety made automatic.</p>
+
+The guides to [Sayon](https://github.com/sayon-lang/sayon), which will be published at `docs.sayon-lang.org`:
+
+- [Installing](installing.md): installers for each device, what they change, and uninstalling
+- [The language](language.md): a reference for everything implemented so far, from values and ownership to projects, packages, and targets
+
+The references that change with the compiler stay beside its code, in [sayon-lang/sayon](https://github.com/sayon-lang/sayon/tree/main/docs):
+
+- [Feature ledger](https://github.com/sayon-lang/sayon/blob/main/docs/features.md): what exists, what is planned, and for which milestone
+- [Error codes](https://github.com/sayon-lang/sayon/blob/main/docs/errors.md): what each diagnostic and runtime error code means, also shown by `sayon explain CODE`
+- [Implementation records](https://github.com/sayon-lang/sayon/blob/main/docs/implementation.md): grammar, ownership rules, cleanup order, data layouts, and the error ABI
+- [Licenses](https://github.com/sayon-lang/sayon/blob/main/docs/licenses.md): what is not Sayon's own in its files and in the programs it builds
+
+The package registry's protocol is in [packages.sayon-lang.org](https://github.com/sayon-lang/packages.sayon-lang.org).
+
+## Writing here
+
+These pages describe Sayon as it is implemented: a change to the language goes with a change here. Each page is Markdown that GitHub shows as it is; the site will be made from the same files.
+
+## License
+
+[Apache License, Version 2.0, with LLVM's exception](LICENSE), as Sayon.

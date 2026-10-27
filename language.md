@@ -1,6 +1,6 @@
 # The Sayon language
 
-This reference describes the language as currently implemented. Features scheduled for later milestones are listed in [features.md](features.md); using one produces an `E_UNAVAILABLE` error that names its milestone.
+This reference describes the language as currently implemented. Features scheduled for later milestones are listed in [the feature ledger](https://github.com/sayon-lang/sayon/blob/main/docs/features.md); using one produces an `E_UNAVAILABLE` error that names its milestone.
 
 ## Source files
 
@@ -1177,7 +1177,7 @@ A range accepts a pre-release only when one of its parts names a pre-release of 
 
 - A project's graph has one version of each registry package: the latest that every range asking for it accepts. When none is, `sayon install` stops and names the ranges and who asks for each.
 - Once `sayon.lock` has a version, `sayon install` keeps it while the ranges still accept it, so installing again changes nothing; to move to a later version, delete `sayon.lock` (or change the range) and install again.
-- A dependency without `registry` comes from the registry `SAYON_REGISTRY` names, or else from Sayon's registry; a registry package's own dependencies without `registry` come from its registry. `package` names the package when it differs from the alias.
+- A dependency without `registry` comes from the registry `SAYON_REGISTRY` names, or else, until Sayon's registry is operated, from the one on this computer at `http://127.0.0.1:4100`, which `node local.mjs --port 4100` in [packages.sayon-lang.org](https://github.com/sayon-lang/packages.sayon-lang.org) starts; a registry package's own dependencies without `registry` come from its registry. `package` names the package when it differs from the alias.
 - Each version's files are checked against the digest the registry published for it when they arrive, and against `sayon.lock` from then on.
 
 `sayon search json` finds packages by part of their names or descriptions, and `sayon info json` shows a package's versions, owner, and dependencies. Both, like every registry command, take `--registry <address>`.
@@ -1189,9 +1189,9 @@ A range accepts a pre-release only when one of its parts names a pre-release of 
 - Publishing needs an account. The registry's operator makes it and gives you its token; `sayon login` asks for the token, checks it with the registry, and keeps it: in the Windows Credential Manager, or elsewhere in `~/.config/sayon/credentials`, which only you can read. `sayon logout` forgets it. Set `SAYON_TOKEN` instead for automated publishing.
 - A package's name belongs to the account that published it first. A version never changes once published, so fixing one means publishing the next.
 - Everything a published package depends on must come from a registry; `dev_dependencies` may be local, since only the package's own tests use them.
-- The registry, its protocol, and how to run one are in [registry.md](registry.md).
+- The registry, its protocol, and how to run one are in its repository, [packages.sayon-lang.org](https://github.com/sayon-lang/packages.sayon-lang.org).
 
-`sayon doctor` reports the Unicode version the toolchain follows and where the standard library, the runtime library, and clang were found. `sayon explain CODE` explains a diagnostic or runtime error code; [errors.md](errors.md) lists them all.
+`sayon doctor` reports the Unicode version the toolchain follows and where the standard library, the runtime library, and clang were found. `sayon explain CODE` explains a diagnostic or runtime error code; [the error codes](https://github.com/sayon-lang/sayon/blob/main/docs/errors.md) lists them all.
 
 ## Targets
 
@@ -1346,7 +1346,7 @@ test "adds integers"
 
 ## Linting
 
-`sayon lint` checks a program like `sayon check` and also warns about code that is valid but probably not meant: unused variables, parameters, imports, and private items; names that do not follow the conventions; variables that hide others; and an assignment that makes a new variable whose name is one letter away from an existing one. The standard library is not linted. [errors.md](errors.md#lint-warnings) describes each warning.
+`sayon lint` checks a program like `sayon check` and also warns about code that is valid but probably not meant: unused variables, parameters, imports, and private items; names that do not follow the conventions; variables that hide others; and an assignment that makes a new variable whose name is one letter away from an existing one. The standard library is not linted. [the error codes](https://github.com/sayon-lang/sayon/blob/main/docs/errors.md#lint-warnings) describes each warning.
 
 ```sayon
 total = 0

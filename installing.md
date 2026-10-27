@@ -10,7 +10,7 @@ Each release has an installer for each device it supports, named after the opera
 | Linux, ARM64 processors | `sayon-<version>-linux-arm64-setup` | not yet; arrives with the ARM64 validation in milestone M5 |
 | macOS | `sayon-<version>-macos-arm64-setup` | not yet; planned for milestone M7 |
 
-To find your processor on Windows, open Settings > System > About and look at "System type"; on Linux, `uname -m` prints `x86_64` for x64. Downloads are published on the [releases page](https://github.com/Omnifex-Studio/sayon/releases), together with a `SHA256SUMS.txt` file for checking them: `Get-FileHash <file>` in PowerShell prints the checksum to compare, and `sha256sum -c SHA256SUMS.txt` on Linux checks every file next to it. No release has been published yet; see [Building the downloads](#building-the-downloads) to make the installer yourself.
+To find your processor on Windows, open Settings > System > About and look at "System type"; on Linux, `uname -m` prints `x86_64` for x64. Downloads are published on the [releases page](https://github.com/sayon-lang/sayon/releases), together with a `SHA256SUMS.txt` file for checking them: `Get-FileHash <file>` in PowerShell prints the checksum to compare, and `sha256sum -c SHA256SUMS.txt` on Linux checks every file next to it. No release has been published yet; see [Building the downloads](#building-the-downloads) to make the installer yourself.
 
 ## Windows
 
