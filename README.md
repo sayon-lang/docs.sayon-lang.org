@@ -29,10 +29,10 @@ sayon run
 sayon test
 ```
 
-`sayon run` writes `site/`: each guide's page, in the layout of `src/layout.sayon`, with the files of `static/` (the stylesheet and the logo) beside them. `src/markdown.sayon` reads Markdown as these pages write it: headings with the ids GitHub gives them, paragraphs, lists, tables, code (Sayon's highlighted by `src/highlight.sayon`), and in text `code`, **strong**, *emphasis*, and links, those to another guide made links to its page. `sayon test` runs its tests, and checks that `site/` holds what the program makes, so a change to a page goes with its HTML. `site/` is plain HTML and CSS that any static host serves; to see it:
+`sayon run` writes `site/`: each guide's page, in the layout of `src/layout.sayon`, with the files of `static/` (the stylesheet and the logo) beside them. `src/markdown.sayon` reads Markdown as these pages write it: headings with the ids GitHub gives them, paragraphs, lists, tables, code (Sayon's highlighted by `src/highlight.sayon`), and in text `code`, **strong**, *emphasis*, and links, those to another guide made links to its page. `sayon test` runs its tests, and checks that `site/` holds what the program makes, so a change to a page goes with its HTML. `site/` is plain HTML and CSS that any static host serves. To see it, Sayon serves it too, with `src/serve.sayon`, at `http://localhost:8000`:
 
 ```bash
-python -m http.server 8000 --directory site
+sayon run -- serve
 ```
 
 ## License
